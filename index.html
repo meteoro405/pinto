@@ -824,8 +824,12 @@ async function analyzeWithAI(base64, mime) {
 Si no podés detectar el importe, devolvé importe: 0. Si no podés leer la imagen, devolvé los tres campos en null.`;
 
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
+      signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': apiKey,
@@ -833,7 +837,7 @@ Si no podés detectar el importe, devolvé importe: 0. Si no podés leer la imag
         'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
-        model: 'claude-opus-4-5',
+        model: 'claude-sonnet-4-5',
         max_tokens: 256,
         messages: [{
           role: 'user',
@@ -846,9 +850,12 @@ Si no podés detectar el importe, devolvé importe: 0. Si no podés leer la imag
     });
 
     if (!response.ok) {
+      clearTimeout(timeout);
       const err = await response.json().catch(() => ({}));
       throw new Error(err.error?.message || `Error ${response.status}`);
     }
+
+    clearTimeout(timeout);
 
     const data = await response.json();
     const text = data.content?.[0]?.text || '';
@@ -867,7 +874,11 @@ Si no podés detectar el importe, devolvé importe: 0. Si no podés leer la imag
 
     setAiStatus('success', 'Factura analizada. Revisá y corregí si es necesario.');
   } catch(err) {
-    setAiStatus('error', 'No se pudo analizar: ' + err.message);
+    if (err.name === 'AbortError') {
+      setAiStatus('error', 'Tiempo de espera agotado. Revisá tu conexión e intentá de nuevo.');
+    } else {
+      setAiStatus('error', 'No se pudo analizar: ' + err.message);
+    }
   }
 }
 

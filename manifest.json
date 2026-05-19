@@ -2,14 +2,15 @@
   "name": "Facturas",
   "short_name": "Facturas",
   "description": "Registrá y analizá tus facturas con IA",
-  "start_url": "/",
+  "start_url": "/pinto/",
+  "scope": "/pinto/",
   "display": "standalone",
   "background_color": "#F36A24",
   "theme_color": "#F36A24",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f172a'/><text y='.9em' font-size='80'>🧾</text></svg>",
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23F36A24'/><text y='.9em' font-size='80'>🧾</text></svg>",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
