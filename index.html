@@ -5,23 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0f172a">
+<meta name="theme-color" content="#F36A24">
 <title>Facturas</title>
 <link rel="manifest" href="manifest.json">
 <style>
   :root {
-    --bg: #0f172a;
-    --surface: #1e293b;
-    --surface2: #273348;
-    --border: rgba(255,255,255,0.08);
-    --accent: #38bdf8;
-    --accent-dim: rgba(56,189,248,0.15);
-    --text: #f1f5f9;
-    --text-muted: #94a3b8;
-    --text-faint: #475569;
-    --success: #34d399;
-    --danger: #f87171;
-    --warning: #fbbf24;
+    --bg: #F36A24;
+    --surface: rgba(0,0,0,0.18);
+    --surface2: rgba(0,0,0,0.28);
+    --border: rgba(255,255,255,0.18);
+    --accent: #ffffff;
+    --accent-dim: rgba(255,255,255,0.15);
+    --text: #ffffff;
+    --text-muted: rgba(255,255,255,0.75);
+    --text-faint: rgba(255,255,255,0.4);
+    --success: #86efac;
+    --danger: #fca5a5;
+    --warning: #fde68a;
     --radius: 16px;
     --radius-sm: 10px;
   }
@@ -49,7 +49,7 @@
     top: 0;
     background: var(--bg);
     z-index: 10;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
   }
   .header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
   .header .month-badge {
@@ -158,13 +158,13 @@
     right: 20px;
     width: 60px; height: 60px;
     border-radius: 50%;
-    background: var(--accent);
-    color: #0f172a;
+    background: rgba(0,0,0,0.25);
+    color: #ffffff;
     font-size: 28px;
     font-weight: 300;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 24px rgba(56,189,248,0.35);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.25);
     z-index: 100;
     transition: transform 0.15s, box-shadow 0.15s;
     border: none;
@@ -176,11 +176,13 @@
     position: fixed;
     bottom: 0; left: 50%; transform: translateX(-50%);
     width: 100%; max-width: 430px;
-    background: var(--bg);
-    border-top: 1px solid var(--border);
+    background: rgba(0,0,0,0.2);
+    border-top: 1px solid rgba(255,255,255,0.15);
     display: flex;
     padding: 8px 0 20px;
     z-index: 99;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
   .nav-item {
     flex: 1;
@@ -210,7 +212,8 @@
   }
   .sheet-overlay.open { display: flex; }
   .sheet {
-    background: var(--surface);
+    background: #fff;
+    color: #1a1a1a;
     border-radius: 24px 24px 0 0;
     width: 100%; max-width: 430px;
     padding: 0 20px 40px;
@@ -221,33 +224,33 @@
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
   .sheet-handle {
     width: 36px; height: 4px;
-    background: var(--text-faint);
+    background: #ccc;
     border-radius: 2px;
     margin: 12px auto 20px;
   }
-  .sheet-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+  .sheet-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: #1a1a1a; }
 
   /* FORM */
   .form-group { margin-bottom: 16px; }
-  .form-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; display: block; }
+  .form-label { font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; display: block; }
   .form-input {
     width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
     border-radius: var(--radius-sm);
     padding: 12px 14px;
-    color: var(--text);
+    color: #1a1a1a;
     font-size: 16px;
     font-family: inherit;
     outline: none;
     transition: border-color 0.15s;
   }
-  .form-input:focus { border-color: var(--accent); }
+  .form-input:focus { border-color: #F36A24; }
   select.form-input { -webkit-appearance: none; }
   .btn-primary {
     width: 100%;
-    background: var(--accent);
-    color: #0f172a;
+    background: #F36A24;
+    color: #fff;
     border: none;
     border-radius: var(--radius-sm);
     padding: 14px;
@@ -263,8 +266,8 @@
   .btn-secondary {
     width: 100%;
     background: transparent;
-    color: var(--text-muted);
-    border: 1px solid var(--border);
+    color: #888;
+    border: 1px solid #e0e0e0;
     border-radius: var(--radius-sm);
     padding: 12px;
     font-size: 15px;
@@ -273,14 +276,14 @@
     font-family: inherit;
     transition: background 0.15s;
   }
-  .btn-secondary:active { background: var(--surface2); }
+  .btn-secondary:active { background: #f5f5f5; }
 
   /* PHOTO PREVIEW */
   .photo-preview {
     width: 100%;
     border-radius: var(--radius-sm);
-    background: var(--bg);
-    border: 1px dashed var(--border);
+    background: #f5f5f5;
+    border: 1px dashed #ccc;
     aspect-ratio: 4/3;
     display: flex;
     align-items: center;
@@ -290,24 +293,24 @@
     margin-bottom: 16px;
   }
   .photo-preview img { width: 100%; height: 100%; object-fit: cover; }
-  .photo-placeholder { text-align: center; color: var(--text-faint); }
+  .photo-placeholder { text-align: center; color: #aaa; }
   .photo-placeholder svg { width: 40px; height: 40px; margin-bottom: 8px; opacity: 0.5; }
   .photo-placeholder p { font-size: 13px; }
 
   /* AI STATUS */
   .ai-status {
     display: flex; align-items: center; gap: 10px;
-    background: var(--bg);
-    border: 1px solid var(--border);
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
     border-radius: var(--radius-sm);
     padding: 12px 14px;
     margin-bottom: 16px;
     font-size: 13px;
-    color: var(--text-muted);
+    color: #666;
   }
-  .ai-status.loading { border-color: rgba(56,189,248,0.3); color: var(--accent); }
-  .ai-status.success { border-color: rgba(52,211,153,0.3); color: var(--success); }
-  .ai-status.error { border-color: rgba(248,113,113,0.3); color: var(--danger); }
+  .ai-status.loading { border-color: rgba(243,106,36,0.4); color: #F36A24; background: rgba(243,106,36,0.06); }
+  .ai-status.success { border-color: rgba(34,197,94,0.4); color: #16a34a; background: rgba(34,197,94,0.06); }
+  .ai-status.error { border-color: rgba(239,68,68,0.4); color: #dc2626; background: rgba(239,68,68,0.06); }
   .spinner {
     width: 16px; height: 16px;
     border: 2px solid currentColor;
@@ -336,8 +339,8 @@
 
   /* CATEGORIES SCREEN */
   .cat-manage-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
     border-radius: var(--radius-sm);
     padding: 12px 14px;
     display: flex;
@@ -346,9 +349,9 @@
     margin-bottom: 8px;
   }
   .cat-color-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; cursor: pointer; }
-  .cat-manage-name { flex: 1; font-size: 15px; }
+  .cat-manage-name { flex: 1; font-size: 15px; color: #1a1a1a; }
   .cat-delete-btn {
-    background: none; border: none; color: var(--text-faint);
+    background: none; border: none; color: #aaa;
     cursor: pointer; font-size: 18px; padding: 4px;
   }
 
@@ -365,7 +368,7 @@
 
   /* DELETE TX */
   .tx-delete-btn {
-    background: rgba(248,113,113,0.1); border: none; color: var(--danger);
+    background: rgba(239,68,68,0.08); border: none; color: #dc2626;
     border-radius: var(--radius-sm); padding: 10px 20px;
     font-size: 14px; cursor: pointer; width: 100%; margin-top: 8px;
     font-family: inherit; font-weight: 500;
@@ -384,16 +387,16 @@
 
   /* API KEY NOTICE */
   .api-key-notice {
-    background: rgba(251,191,36,0.1);
-    border: 1px solid rgba(251,191,36,0.3);
+    background: rgba(243,106,36,0.08);
+    border: 1px solid rgba(243,106,36,0.3);
     border-radius: var(--radius-sm);
     padding: 12px 14px;
     font-size: 13px;
-    color: var(--warning);
+    color: #c2520e;
     margin-bottom: 16px;
     line-height: 1.5;
   }
-  .api-key-notice a { color: var(--warning); }
+  .api-key-notice a { color: #c2520e; }
 
   .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; }
 </style>
@@ -474,7 +477,7 @@
 
     <div class="section-title" style="margin-top: 32px;">Datos</div>
     <button class="btn-secondary" onclick="exportData()">Exportar datos (JSON)</button>
-    <button class="btn-secondary" style="color: var(--danger); border-color: rgba(248,113,113,0.3); margin-top: 8px;" onclick="clearAllData()">Borrar todos los datos</button>
+    <button class="btn-secondary" style="color: #dc2626; border-color: rgba(239,68,68,0.3); margin-top: 8px;" onclick="clearAllData()">Borrar todos los datos</button>
   </div>
 </div>
 
@@ -909,17 +912,17 @@ function openTxDetail(id) {
 
   document.getElementById('tx-detail-title').textContent = tx.concepto;
   document.getElementById('tx-detail-body').innerHTML = `
-    <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:12px">
+    <div style="background:#f5f5f5;border:1px solid #e0e0e0;border-radius:var(--radius-sm);padding:16px;margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;margin-bottom:12px">
-        <span style="font-size:13px;color:var(--text-muted)">Importe</span>
-        <span style="font-size:20px;font-weight:700;color:var(--accent)">${formatCurrency(tx.importe)}</span>
+        <span style="font-size:13px;color:#666">Importe</span>
+        <span style="font-size:20px;font-weight:700;color:#F36A24">${formatCurrency(tx.importe)}</span>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:12px">
-        <span style="font-size:13px;color:var(--text-muted)">Fecha</span>
-        <span style="font-size:14px">${formatDate(tx.fecha)}</span>
+        <span style="font-size:13px;color:#666">Fecha</span>
+        <span style="font-size:14px;color:#1a1a1a">${formatDate(tx.fecha)}</span>
       </div>
       <div style="display:flex;justify-content:space-between">
-        <span style="font-size:13px;color:var(--text-muted)">Categoría</span>
+        <span style="font-size:13px;color:#666">Categoría</span>
         <span class="tag" style="background:${cat.color}22;color:${cat.color}">${cat.name}</span>
       </div>
     </div>`;
