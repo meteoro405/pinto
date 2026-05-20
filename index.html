@@ -503,10 +503,13 @@ function changeMonthReport(dir) {
 }
 
 function renderCategories() {
-  document.getElementById("cats-list").innerHTML = state.categories.map(function(cat) {
-    return "<div class='cat-manage-item'><div class='cat-color-dot' style='background:"+cat.color+"'></div><div class='cat-manage-name'>"+cat.name+"</div><button class='cat-delete-btn' onclick="deleteCategory('"+cat.id+"')">x</button></div>";
-  }).join("");
+  var html = "";
+  state.categories.forEach(function(cat) {
+    html += "<div class='cat-manage-item'><div class='cat-color-dot' style='background:" + cat.color + "'></div><div class='cat-manage-name'>" + cat.name + "</div><button class='cat-delete-btn' data-id='" + cat.id + "' onclick='delCat(this)'>x</button></div>";
+  });
+  document.getElementById("cats-list").innerHTML = html;
 }
+function delCat(btn) { deleteCategory(btn.getAttribute("data-id")); }
 
 function renderConfig() {
   document.getElementById("api-key-input").value = state.apiKey||"";
@@ -570,7 +573,7 @@ function analyzeWithAI(base64, mime) {
   if(!state.apiKey){setAiStatus("error","Falta la API key. Configurala en Config.");return;}
   setAiStatus("loading","Analizando la factura con IA...");
   var catNames=state.categories.map(function(c){return c.name;}).join(", ");
-  var prompt="Analiza esta imagen de una factura o ticket. Responde UNICAMENTE con JSON valido, sin texto extra, sin markdown ni backticks. Campos: {"concepto":"proveedor o tipo de gasto (max 40 chars)","importe":1234.56,"iva":123.45,"categoria":"una de: "+catNames+""} Si el IVA no figura discriminado devuelve iva:0. Si no puedes leer la imagen devuelve todo null.";
+    var prompt = 'Analiza esta imagen de una factura o ticket. Responde SOLO con JSON valido sin markdown. Formato exacto: {"concepto":"descripcion max 40 chars","importe":0.00,"iva":0.00,"categoria":"una de: ' + catNames + '"}. Si IVA no figura discriminado pon 0. Si no lees la imagen pon null.';
   var controller=new AbortController();
   var timeout=setTimeout(function(){controller.abort();},45000);
   fetch("https://api.anthropic.com/v1/messages",{
@@ -646,12 +649,15 @@ function deleteCategory(id){
 function saveApiKey(){state.apiKey=document.getElementById("api-key-input").value.trim();saveState();alert("API key guardada");}
 function saveEmails(){state.emails=document.getElementById("email-input").value.trim();saveState();alert("Email(s) guardado(s)");}
 
-function generateCSV(txs){
-  var headers=["Fecha","Concepto","Categoria","Importe","IVA","Neto"];
-  var rows=txs.map(function(t){var cat=getCategoryById(t.categoriaId);var neto=(Number(t.importe||0)-Number(t.iva||0)).toFixed(2);return[t.fecha,'"'+t.concepto+'"','"'+cat.name+'"',Number(t.importe||0).toFixed(2),Number(t.iva||0).toFixed(2),neto].join(",");});
-  return headers.join(",")+"
-"+rows.join("
-");
+function generateCSV(txs) {
+  var sep = "\n";
+  var headers = ["Fecha","Concepto","Categoria","Importe","IVA","Neto"];
+  var rows = txs.map(function(t) {
+    var cat = getCategoryById(t.categoriaId);
+    var neto = (Number(t.importe||0) - Number(t.iva||0)).toFixed(2);
+    return [t.fecha, '"'+t.concepto+'"', '"'+cat.name+'"', Number(t.importe||0).toFixed(2), Number(t.iva||0).toFixed(2), neto].join(",");
+  });
+  return headers.join(",") + sep + rows.join(sep);
 }
 
 function exportCSV(){
@@ -672,10 +678,7 @@ function exportAndEmail(){
     var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="facturas_app_"+mKey+".zip"; a.click();
     if(state.emails){
       var subject=encodeURIComponent("Facturas "+monthLabel(state.viewYear,state.viewMonth));
-      var body=encodeURIComponent("Adjunto el ZIP con los movimientos y "+photoCount+" fotos del mes de "+monthLabel(state.viewYear,state.viewMonth)+".
-
-Total: "+formatCurrency(sorted.reduce(function(s,t){return s+Number(t.importe||0);},0))+"
-IVA: "+formatCurrency(sorted.reduce(function(s,t){return s+Number(t.iva||0);},0)));
+          var body = encodeURIComponent("Adjunto el ZIP con los movimientos y " + photoCount + " fotos del mes de " + monthLabel(state.viewYear, state.viewMonth) + ". Total: " + formatCurrency(sorted.reduce(function(s,t){return s+Number(t.importe||0);},0)) + " IVA: " + formatCurrency(sorted.reduce(function(s,t){return s+Number(t.iva||0);},0)));
       setTimeout(function(){window.location.href="mailto:"+state.emails+"?subject="+subject+"&body="+body;},800);
     }
   });
